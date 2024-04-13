@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
   //   res.status(500).json({ message: err.message });
   // }
   try {
-    const cartData = await Cart.find().populate("items.productId"); // Populate the product details for each item
+    const cartData = await Cart.find().populate("items.productId").maxTimeMS(10000);; // Populate the product details for each item
     res.json(cartData);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -26,13 +26,13 @@ router.post("/add", async (req, res) => {
 
   try {
     // Check if the product exists
-    const product = await Product.findById(productId);
+    const product = await Product.findById(productId).maxTimeMS(10000);;
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
     }
 
     // Check if the cart exists
-    let cart = await Cart.findOne();
+    let cart = await Cart.findOne().maxTimeMS(10000);;
     if (!cart) {
       // If cart doesn't exist, create a new one
       cart = new Cart({ items: [{ productId }] });
@@ -46,12 +46,12 @@ router.post("/add", async (req, res) => {
         cart.items[existingItemIndex].quantity += 1;
       } else {
         // If the product is not in the cart, add it
-        cart.items.push({ productId });
+        cart.items.push({ productId }).maxTimeMS(10000);;
       }
     }
 
     // Save the cart
-    await cart.save();
+    await cart.save().maxTimeMS(10000);;
     res.status(200).json({ message: "Product added to cart" });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -68,7 +68,7 @@ router.delete("/remove/:productId", async (req, res) => {
       {},
       { $pull: { items: { productId } } },
       { new: true }
-    );
+    ).maxTimeMS(10000);;
 
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });

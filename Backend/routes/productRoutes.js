@@ -5,7 +5,7 @@ const Product = require("../models/Product");
 // Get all products
 router.get("/", async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().maxTimeMS(10000);;
     res.json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -26,7 +26,7 @@ router.post("/addproduct", async (req, res) => {
   });
   //const newProduct = await product.save();
   try {
-    const newProduct = await product.save();
+    const newProduct = await product.save().maxTimeMS(10000); ;
     res.status(201).json(newProduct); // Send HTTP status code 201
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -38,7 +38,7 @@ router.get("/:categoryName", async (req, res) => {
   try {
     const products = await Product.find({
       category: categoryName,
-    });
+    }).maxTimeMS(10000);;
     res.json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });

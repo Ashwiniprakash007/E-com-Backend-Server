@@ -6,7 +6,7 @@ const Product = require('../models/Product');
 // Get all categories
 router.get('/', async (req, res) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find().maxTimeMS(10000);;
     res.json(categories);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -19,7 +19,7 @@ router.post('/addCtegory', async (req, res) => {
     name: req.body.name,
   });
   try {
-    const newCategory = await category.save();
+    const newCategory = await category.save().maxTimeMS(10000);;
     res.status(201).json(newCategory);
   } catch (err) {
     res.status(400).json({ message: err.message });
